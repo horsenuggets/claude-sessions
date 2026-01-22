@@ -4,19 +4,35 @@ Run multiple Claude Code instances in parallel with session awareness and inter-
 
 ## Installation
 
+### macOS / Linux / WSL / Git Bash
+
 ```bash
 git clone https://github.com/horsenuggets/claude-sessions.git ~/git/claude-sessions
 cd ~/git/claude-sessions
-./install.sh
+./Scripts/install.sh
+```
+
+### Windows PowerShell
+
+```powershell
+git clone https://github.com/horsenuggets/claude-sessions.git $env:USERPROFILE\git\claude-sessions
+cd $env:USERPROFILE\git\claude-sessions
+.\Scripts\install.ps1
 ```
 
 ### Dependencies
 
-- [tmux](https://github.com/tmux/tmux) - Terminal multiplexer
+- [tmux](https://github.com/tmux/tmux) - Terminal multiplexer (not available on Windows, use WSL)
 - [jq](https://jqlang.github.io/jq/) - JSON processor
 
+**macOS/Linux:**
 ```bash
 brew install tmux jq
+```
+
+**Windows:**
+```powershell
+winget install jqlang.jq
 ```
 
 ## Quick Start
@@ -47,7 +63,7 @@ crepo my-api "implement rate limiting"
 
 | Command | Description |
 |---------|-------------|
-| `claude-ls` or `cls` | List all active sessions |
+| `claude-ls` or `csls` | List all active sessions |
 | `claude-cleanup` | Remove dead/stale sessions |
 
 ### Communication
@@ -130,7 +146,7 @@ tmux attach           # Everything still running
 ### Check what's running
 
 ```bash
-cls                   # See all Claude sessions
+csls                  # See all Claude sessions
 Ctrl+a w              # See all tmux windows
 ```
 
@@ -138,6 +154,18 @@ Ctrl+a w              # See all tmux windows
 
 | Path | Description |
 |------|-------------|
+| `Scripts/` | Shell and PowerShell scripts |
 | `~/.tmux.conf` | tmux configuration |
 | `~/.claude-sessions/*.json` | Active session metadata |
 | `~/.claude-sessions/messages/` | Inter-session messages |
+
+## Cross-Shell Compatibility
+
+The main script (`Scripts/claude-sessions.sh`) is POSIX-compatible and works with:
+- bash
+- zsh
+- sh
+- Git Bash (Windows)
+- WSL
+
+For Windows PowerShell, use `Scripts/claude-sessions.ps1`.
