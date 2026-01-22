@@ -269,6 +269,6 @@ claude-start() {
 }
 
 # Aliases for convenience
-alias cls='claude-ls'
+alias csls='claude-ls'
 alias csp='claude-spawn'
 alias crepo='claude-repo'
