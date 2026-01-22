@@ -41,6 +41,7 @@ _claude_deregister() {
 }
 
 # Wrapped claude command with session tracking
+# Uses claude-terminal if available, otherwise falls back to claude CLI
 claude-tracked() {
     local session_id=$(_claude_session_id)
     local task="${*:-interactive}"
@@ -48,9 +49,16 @@ claude-tracked() {
     _claude_register "$session_id" "$PWD" "$task"
     export CLAUDE_SESSION_ID="$session_id"
 
-    # Run claude with dangerously-skip-permissions, then cleanup
-    command claude --dangerously-skip-permissions "$@"
-    local exit_code=$?
+    local exit_code=0
+    if command -v claude-terminal &>/dev/null; then
+        # Use claude-terminal for better UX
+        command claude-terminal "$@"
+        exit_code=$?
+    else
+        # Fall back to regular claude CLI
+        command claude --dangerously-skip-permissions "$@"
+        exit_code=$?
+    fi
 
     _claude_deregister "$session_id"
     return $exit_code
